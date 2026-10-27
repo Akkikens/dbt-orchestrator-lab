@@ -1,0 +1,263 @@
+{
+  "metadata": {
+    "dbt_schema_version": "https://schemas.getdbt.com/dbt/run-results/v6.json",
+    "dbt_version": "1.12.6",
+    "generated_at": "2026-10-27T22:19:28.578674Z",
+    "invocation_id": "261848b8-9916-4b29-97fd-cab71e2beb89"
+  },
+  "results": [
+    {
+      "status": "success",
+      "timing": [
+        {
+          "name": "compile",
+          "started_at": "2026-10-27T22:19:28.492994Z",
+          "completed_at": "2026-10-27T22:19:28.492996Z"
+        },
+        {
+          "name": "execute",
+          "started_at": "2026-10-27T22:19:28.493178Z",
+          "completed_at": "2026-10-27T22:19:28.527648Z"
+        }
+      ],
+      "thread_id": "Thread-1 (worker)",
+      "execution_time": 0.03540802001953125,
+      "adapter_response": {
+        "_message": "INSERT 5",
+        "code": "INSERT",
+        "rows_affected": 5
+      },
+      "message": "INSERT 5",
+      "failures": null,
+      "unique_id": "seed.jaffle.raw_customers",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "success",
+      "timing": [
+        {
+          "name": "compile",
+          "started_at": "2026-10-27T22:19:28.493090Z",
+          "completed_at": "2026-10-27T22:19:28.493091Z"
+        },
+        {
+          "name": "execute",
+          "started_at": "2026-10-27T22:19:28.493486Z",
+          "completed_at": "2026-10-27T22:19:28.528200Z"
+        }
+      ],
+      "thread_id": "Thread-2 (worker)",
+      "execution_time": 0.035897016525268555,
+      "adapter_response": {
+        "_message": "INSERT 6",
+        "code": "INSERT",
+        "rows_affected": 6
+      },
+      "message": "INSERT 6",
+      "failures": null,
+      "unique_id": "seed.jaffle.raw_orders",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "success",
+      "timing": [
+        {
+          "name": "compile",
+          "started_at": "2026-10-27T22:19:28.530572Z",
+          "completed_at": "2026-10-27T22:19:28.533095Z"
+        },
+        {
+          "name": "execute",
+          "started_at": "2026-10-27T22:19:28.541206Z",
+          "completed_at": "2026-10-27T22:19:28.551002Z"
+        }
+      ],
+      "thread_id": "Thread-1 (worker)",
+      "execution_time": 0.0210568904876709,
+      "adapter_response": {
+        "_message": "OK"
+      },
+      "message": "OK",
+      "failures": null,
+      "unique_id": "model.jaffle.stg_customers",
+      "relation_name": "\"b\".\"main\".\"stg_customers\"",
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "error",
+      "timing": [
+        {
+          "name": "compile",
+          "started_at": "2026-10-27T22:19:28.532283Z",
+          "completed_at": "2026-10-27T22:19:28.532961Z"
+        },
+        {
+          "name": "execute",
+          "started_at": "2026-10-27T22:19:28.533208Z",
+          "completed_at": "2026-10-27T22:19:28.547894Z"
+        }
+      ],
+      "thread_id": "Thread-2 (worker)",
+      "execution_time": 0.02692127227783203,
+      "adapter_response": {},
+      "message": "Runtime Error in model stg_orders (models/staging/stg_orders.sql)\n  Binder Error: Referenced column \"no_such_column\" not found in FROM clause!\n  Candidate bindings: \"amount_cents\"",
+      "failures": null,
+      "unique_id": "model.jaffle.stg_orders",
+      "relation_name": "\"b\".\"main\".\"stg_orders\"",
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "pass",
+      "timing": [
+        {
+          "name": "compile",
+          "started_at": "2026-10-27T22:19:28.552312Z",
+          "completed_at": "2026-10-27T22:19:28.555923Z"
+        },
+        {
+          "name": "execute",
+          "started_at": "2026-10-27T22:19:28.556048Z",
+          "completed_at": "2026-10-27T22:19:28.572077Z"
+        }
+      ],
+      "thread_id": "Thread-1 (worker)",
+      "execution_time": 0.020888805389404297,
+      "adapter_response": {
+        "_message": "OK"
+      },
+      "message": null,
+      "failures": 0,
+      "unique_id": "test.jaffle.not_null_stg_customers_customer_id.e2cfb1f9aa",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "pass",
+      "timing": [
+        {
+          "name": "compile",
+          "started_at": "2026-10-27T22:19:28.563708Z",
+          "completed_at": "2026-10-27T22:19:28.566297Z"
+        },
+        {
+          "name": "execute",
+          "started_at": "2026-10-27T22:19:28.566410Z",
+          "completed_at": "2026-10-27T22:19:28.572555Z"
+        }
+      ],
+      "thread_id": "Thread-2 (worker)",
+      "execution_time": 0.009704828262329102,
+      "adapter_response": {
+        "_message": "OK"
+      },
+      "message": null,
+      "failures": 0,
+      "unique_id": "test.jaffle.unique_stg_customers_customer_id.c7614daada",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "skipped",
+      "timing": [],
+      "thread_id": "Thread-1 (worker)",
+      "execution_time": 0,
+      "adapter_response": {},
+      "message": null,
+      "failures": null,
+      "unique_id": "test.jaffle.accepted_values_stg_orders_status__placed__completed__returned.900bfeb432",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "skipped",
+      "timing": [],
+      "thread_id": "Thread-2 (worker)",
+      "execution_time": 0,
+      "adapter_response": {},
+      "message": null,
+      "failures": null,
+      "unique_id": "test.jaffle.not_null_stg_orders_order_id.81cfe2fe64",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "skipped",
+      "timing": [],
+      "thread_id": "Thread-1 (worker)",
+      "execution_time": 0,
+      "adapter_response": {},
+      "message": null,
+      "failures": null,
+      "unique_id": "test.jaffle.relationships_stg_orders_customer_id__customer_id__ref_stg_customers_.430bf21500",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "skipped",
+      "timing": [],
+      "thread_id": "Thread-2 (worker)",
+      "execution_time": 0,
+      "adapter_response": {},
+      "message": null,
+      "failures": null,
+      "unique_id": "test.jaffle.unique_stg_orders_order_id.e3b841c71a",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "skipped",
+      "timing": [],
+      "thread_id": "Thread-1 (worker)",
+      "execution_time": 0,
+      "adapter_response": {},
+      "message": null,
+      "failures": null,
+      "unique_id": "model.jaffle.customers",
+      "relation_name": "\"b\".\"main\".\"customers\"",
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "skipped",
+      "timing": [],
+      "thread_id": "Thread-2 (worker)",
+      "execution_time": 0,
+      "adapter_response": {},
+      "message": null,
+      "failures": null,
+      "unique_id": "test.jaffle.not_null_customers_customer_id.5c9bf9911d",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    },
+    {
+      "status": "skipped",
+      "timing": [],
+      "thread_id": "Thread-1 (worker)",
+      "execution_time": 0,
+      "adapter_response": {},
+      "message": null,
+      "failures": null,
+      "unique_id": "test.jaffle.unique_customers_customer_id.c5af1ff4b1",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    }
+  ],
+  "elapsed_time": 0.2115950584411621,
+  "args": {
+    "which": "build"
+  }
+}

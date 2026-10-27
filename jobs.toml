@@ -1,0 +1,46 @@
+# Job definitions loaded by `orchestrator load-jobs` (and by `orchestrator all`).
+# A job is a DAG of dbt commands. Path flags (--project-dir, --target-path, ...)
+# are set by the worker and rejected here.
+
+[[jobs]]
+name = "jaffle_nightly"
+cron = "0 2 * * *"            # 02:00 UTC daily
+max_concurrency = 1
+timeout_secs = 600
+retry = { max_attempts = 3, base_delay_ms = 2000, max_delay_ms = 60000 }
+
+  [[jobs.steps]]
+  name = "seed"
+  command = "dbt seed"
+
+  [[jobs.steps]]
+  name = "staging"
+  command = "dbt build --select staging"
+  depends_on = ["seed"]
+
+  [[jobs.steps]]
+  name = "marts"
+  command = "dbt build --select marts"
+  depends_on = ["staging"]
+
+# Fails on purpose (a singular test that always returns rows), to show retries,
+# skipped downstream steps and failed-node projection end to end.
+[[jobs]]
+name = "jaffle_broken"
+max_concurrency = 2
+timeout_secs = 300
+retry = { max_attempts = 2, base_delay_ms = 500, max_delay_ms = 2000, retry_on_node_failure = true }
+
+  [[jobs.steps]]
+  name = "build"
+  command = "dbt build"
+
+  [[jobs.steps]]
+  name = "audit"
+  command = "dbt test --select tag:always_fails --vars '{enable_failing_test: true}'"
+  depends_on = ["build"]
+
+  [[jobs.steps]]
+  name = "publish"
+  command = "dbt run --select marts"
+  depends_on = ["audit"]

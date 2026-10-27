@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "dbt_schema_version": "https://schemas.getdbt.com/dbt/run-results/v6.json",
+    "dbt_version": "1.12.6",
+    "generated_at": "2026-10-27T22:19:13.921327Z",
+    "invocation_id": "d9ce741d-1b17-4301-afbd-2421aaacefa5"
+  },
+  "results": [
+    {
+      "status": "fail",
+      "timing": [
+        {
+          "name": "compile",
+          "started_at": "2026-10-27T22:19:13.903023Z",
+          "completed_at": "2026-10-27T22:19:13.905498Z"
+        },
+        {
+          "name": "execute",
+          "started_at": "2026-10-27T22:19:13.905621Z",
+          "completed_at": "2026-10-27T22:19:13.918693Z"
+        }
+      ],
+      "thread_id": "Thread-1 (worker)",
+      "execution_time": 0.016338825225830078,
+      "adapter_response": {
+        "_message": "OK"
+      },
+      "message": "Got 5 results, configured to fail if != 0",
+      "failures": 5,
+      "unique_id": "test.jaffle.always_fails",
+      "relation_name": null,
+      "batch_results": null,
+      "overload_results": null
+    }
+  ],
+  "elapsed_time": 0.13900208473205566,
+  "args": {
+    "which": "test"
+  }
+}

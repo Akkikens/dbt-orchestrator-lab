@@ -1,0 +1,42 @@
+# Local stack: Postgres + Redpanda (Kafka API) + the orchestrator in one process.
+#   docker compose up -d --build --wait
+#   open http://localhost:8080/graphql   (GraphiQL)
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: orchestrator
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 2s
+      retries: 30
+
+  redpanda:
+    image: redpandadata/redpanda:v24.2.7
+    command:
+      - redpanda
+      - start
+      - --mode=dev-container
+      - --smp=1
+      - --overprovisioned
+      - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://localhost:19092
+    ports: ["19092:19092"]
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true'"]
+      interval: 2s
+      retries: 60
+
+  orchestrator:
+    build: .
+    depends_on:
+      postgres: { condition: service_healthy }
+      redpanda: { condition: service_healthy }
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/orchestrator
+      KAFKA_BROKERS: redpanda:9092
+      RUST_LOG: info,orchestrator=info
+      LOG_FORMAT: pretty
+    ports: ["8080:8080"]

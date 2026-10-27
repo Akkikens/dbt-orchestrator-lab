@@ -1,0 +1,39 @@
+[package]
+name = "orchestrator"
+version = "0.1.0"
+edition.workspace = true
+publish.workspace = true
+description = "Scheduler, dbt worker, outbox relay, Kafka results projector and GraphQL API."
+
+[features]
+default = []
+# OTLP trace export (e.g. to an OpenTelemetry Collector or the Datadog Agent's OTLP intake).
+otel = ["dep:opentelemetry", "dep:opentelemetry_sdk", "dep:opentelemetry-otlp", "dep:tracing-opentelemetry"]
+
+[dependencies]
+orch-core = { path = "../orch-core" }
+anyhow.workspace = true
+async-graphql = { version = "7", features = ["chrono", "uuid"] }
+async-graphql-axum = "7"
+axum = "0.8"
+chrono.workspace = true
+libc = "0.2"
+clap = { version = "4", features = ["derive", "env"] }
+rdkafka = { version = "0.39", features = ["tokio"] }
+serde.workspace = true
+serde_json.workspace = true
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "postgres", "uuid", "chrono", "json", "migrate", "macros"] }
+thiserror.workspace = true
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "process", "signal", "time", "fs", "io-util", "sync"] }
+toml = "0.9"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+uuid.workspace = true
+
+opentelemetry = { version = "0.31", optional = true }
+opentelemetry_sdk = { version = "0.31", optional = true, features = ["rt-tokio"] }
+opentelemetry-otlp = { version = "0.31", optional = true }
+tracing-opentelemetry = { version = "0.32", optional = true }
+
+[dev-dependencies]
+tempfile = "3"

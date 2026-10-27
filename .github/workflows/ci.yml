@@ -1,0 +1,80 @@
+name: ci
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+  DBT_PACKAGES: dbt-core==1.12.6 dbt-duckdb==1.11.1
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # unit tests; the integration suite self-skips without ORCH_IT=1
+      - run: cargo test --workspace
+
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 2s --health-timeout 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install $DBT_PACKAGES && dbt --version
+      # Redpanda needs `redpanda start ...` arguments, which service containers
+      # cannot pass, so it is started as a plain container on the runner.
+      - name: Start Redpanda
+        run: |
+          docker run -d --name redpanda -p 9092:9092 redpandadata/redpanda:v24.2.7 \
+            redpanda start --mode dev-container --smp 1 --overprovisioned \
+            --kafka-addr PLAINTEXT://0.0.0.0:9092 --advertise-kafka-addr PLAINTEXT://localhost:9092
+          for i in $(seq 1 60); do
+            docker exec redpanda rpk cluster health 2>/dev/null | grep -qE 'Healthy:.+true' && exit 0
+            sleep 1
+          done
+          docker logs redpanda; exit 1
+      - name: Integration tests (must run, not skip)
+        env:
+          ORCH_IT: "1"
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          KAFKA_BROKERS: localhost:9092
+        run: |
+          set -o pipefail
+          export DBT_BIN="$(which dbt)"
+          cargo test -p orchestrator --test integration -- --nocapture 2>&1 | tee /tmp/it.txt
+          ! grep -q "skipped: set ORCH_IT" /tmp/it.txt
+
+  compose-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and start the stack
+        run: docker compose up -d --build --wait --wait-timeout 300
+      - name: Trigger a run over GraphQL and wait for the projection
+        run: ./scripts/smoke.sh
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs --no-color | tail -200

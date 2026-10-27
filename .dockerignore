@@ -1,0 +1,5 @@
+target
+.git
+**/*.duckdb
+examples/jaffle/target
+examples/jaffle/logs

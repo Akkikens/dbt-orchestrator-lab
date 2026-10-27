@@ -1,0 +1,8 @@
+jaffle:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # The worker sets DBT_DUCKDB_PATH per job so concurrent test runs never share a file.
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'jaffle.duckdb') }}"
+      threads: 2
